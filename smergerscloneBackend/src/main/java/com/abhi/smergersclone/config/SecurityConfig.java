@@ -36,7 +36,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(org.springframework.security.config.annotation.web.builders.HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/otp/**",
+                                "/api/otp/generate/**")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -83,6 +87,11 @@ public class SecurityConfig {
                 token = authHeader.substring(7);
                 username = jwtUtil.extractUsername(token);
 
+                System.out.println("Auth Header: " + authHeader);
+                System.out.println("Token: " + token);
+                System.out.println("Username from token: " + username);
+
+
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     var userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -90,6 +99,9 @@ public class SecurityConfig {
                         var authToken = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
+                    else{
+                        System.out.println("Token is invalid or Expired");
                     }
                 }
                 filterChain.doFilter(request, response);

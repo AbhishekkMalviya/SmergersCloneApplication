@@ -17,12 +17,25 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
+    //injection for otp service.
+    private final OtpService otpService;
+
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public String register(RegisterRequest request) {
+
+        if (!otpService.isVerified(request.getEmail())) {
+            throw new RuntimeException("Email not verified. Please verify OTP.");
+        }
+
+        // Check if user exists
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("User already exists.");
+        }
+
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())

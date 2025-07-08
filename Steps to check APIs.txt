@@ -1,0 +1,21 @@
+STEP1: POST http://localhost:8080/api/otp/generate?email=YOUR_EMAIL		//GENERATE OTP TO YOUR MAIL
+
+STEP2: POST http://localhost:8080/api/otp/verify				//VERIFY OTP YOU GET
+	BODY->RAW-> {
+    			"email":"YOUR_EMAIL",
+    			"otp":"YOUR_OTP"
+			}
+
+STEP3: POST http://localhost:8080/api/auth/register				//REGISTER YOURSELF 
+ 	BODY->RAW-> {
+    			"fullName":"YOUR_NAME",
+    			"email":"YOUR_EMAIL",
+    			"password":"SET_YOUR_PASSWORD_HERE",
+    			"role":"YOUR_ROLE(ADMIN/OWNER/INVESTOR)"
+			}
+
+STEP4: POST http://localhost:8080/api/auth/login				//LOGIN WITH YOUR CREDENTIALS
+	BODY->RAW-> {    
+    			"email":"YOUR_EMAIL",
+    			"password":"YOUR_PASSWORD"  
+			}
