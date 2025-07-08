@@ -39,7 +39,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/otp/**",
-                                "/api/otp/generate/**")
+                                "/api/otp/generate/**",
+                                "/api/listings/**"
+                        )
                         .permitAll()
                         .anyRequest().authenticated()
                 )
